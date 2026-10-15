@@ -87,6 +87,15 @@ nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap
 .frame button.play:hover .disc { transform: scale(1.08); }
 .frame .cap { position: absolute; left: 14px; bottom: 12px; right: 14px; font-weight: 700; font-size: .9rem; text-shadow: 0 1px 8px rgba(0,0,0,.5); pointer-events: none; }
 .frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.frame .fs {
+  position: absolute; top: 10px; right: 10px; z-index: 3; width: 36px; height: 36px; border: 0; border-radius: var(--r-sm);
+  background: rgba(42,42,43,.55); color: #efebe7; cursor: pointer; display: grid; place-items: center; opacity: .85; transition: opacity .15s;
+}
+.frame .fs:hover, .frame .fs:focus-visible { opacity: 1; background: rgba(42,42,43,.85); }
+.frame .fs svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.frame:has(iframe):not(:fullscreen) .fs { display: none; }  /* the Vimeo player shows its own full screen button once playing */
+.frame:fullscreen { border-radius: 0; box-shadow: none; background-color: #000; }
+.frame:-webkit-full-screen { border-radius: 0; box-shadow: none; background-color: #000; width: 100%; height: 100%; }
 .frame .msg { position: absolute; left: 50%; top: calc(50% + 52px); transform: translateX(-50%); width: max-content; max-width: 90%; background: var(--on-screen); color: var(--screen); border-radius: var(--r-sm); padding: .35rem .7rem; font-weight: 700; font-size: .8rem; text-align: center; }
 
 .reel { display: grid; gap: 10px; }
@@ -319,18 +328,42 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
         .then(function (d) { if (d.thumbnail_url) f.style.backgroundImage = 'url(' + d.thumbnail_url + ')'; })
         .catch(function () {});
     }
-    b.addEventListener('click', function () {
-      if (live) {
+    var fs = document.createElement('button');
+    fs.className = 'fs'; fs.type = 'button';
+    fs.setAttribute('aria-label', 'Play ' + f.dataset.title + ' full screen');
+    fs.title = 'Full screen';
+    fs.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 5V1h4M11 1h4v4M15 11v4h-4M5 15H1v-4"/></svg>';
+    f.appendChild(fs);
+
+    function play() {
+      if (!live) {
+        if (!f.querySelector('.msg')) {
+          var m = document.createElement('span'); m.className = 'msg';
+          m.textContent = 'Plays right here on the live site';
+          f.appendChild(m);
+        }
+        return false;
+      }
+      if (!f.querySelector('iframe')) {
         var i = document.createElement('iframe');
         i.src = 'https://player.vimeo.com/video/' + id + '?autoplay=1&dnt=1';
         i.allow = 'autoplay; fullscreen; picture-in-picture';
+        i.setAttribute('allowfullscreen', '');
         i.title = f.dataset.title;
-        f.replaceChildren(i);
-      } else if (!f.querySelector('.msg')) {
-        var m = document.createElement('span'); m.className = 'msg';
-        m.textContent = 'Plays right here on the live site';
-        f.appendChild(m);
+        b.remove(); cap.remove();
+        f.insertBefore(i, fs);
       }
+      return true;
+    }
+    b.addEventListener('click', play);
+    fs.addEventListener('click', function () {
+      if (!play()) return;
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        return;
+      }
+      var req = f.requestFullscreen || f.webkitRequestFullscreen;
+      if (req) req.call(f);
     });
   });
   document.getElementById('inquiry').addEventListener('submit', function (e) {
