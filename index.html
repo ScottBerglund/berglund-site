@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Berglund is a Brooklyn animation studio making illustrated, hand-drawn animation and motion design for editorial, documentary and brand stories.">
+<meta property="og:title" content="Berglund Studio">
+<meta property="og:description" content="Illustrated animation and motion design, drawn from scratch. Brooklyn, NY.">
+<meta property="og:type" content="website">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Berglund Studio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400..900&display=swap">
+<style>
+/* Layout: a printed sheet on grid paper. One ink on paper, giant heavy headings, wide-spaced small caps, thin lines, rounded frames for the work. */
+:root {
+  --paper: #d8cdc6;
+  --sheet: #efebe7;
+  --ink: #2a2a2b;
+  --graphite: #6e6460;
+  --rule: #c3b6ae;
+  --grid: #b9aaa1;     /* paper dots */
+  --accent: #ee7a7a;   /* one meaning: play */
+  --screen: #2a2a2b;   /* video frames before they load */
+  --on-screen: #efebe7;
+  --shadow: rgba(60,40,30,.07);
+  --f: "Red Hat Display", "Arial Black", system-ui, -apple-system, sans-serif;
+  --r-sm: 6px; --r: 10px; --r-lg: 14px;
+}
+/* One warm look in every theme, by choice: the studio's paper stays the same for every visitor. */
+:root { color-scheme: light; }
+
+* { box-sizing: border-box; }
+body {
+  background-color: var(--paper); color: var(--ink);
+  background-image: radial-gradient(circle, var(--grid) 1.15px, transparent 1.5px);
+  background-size: 24px 24px; background-position: -12px -12px;
+  font: 400 17px/1.5 var(--f);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1180px; margin: 0 auto; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+.eyebrow { font-weight: 500; font-size: .9rem; color: var(--graphite); }
+
+/* top bar */
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding-block: 20px 14px; border-bottom: 1.5px solid var(--ink); }
+.brand { font-weight: 900; letter-spacing: -.01em; font-size: 1.3rem; text-decoration: none; margin-right: auto; }
+nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none; cursor: pointer;
+  border: 1.5px solid var(--sheet); border-radius: var(--r-sm); background: var(--sheet); color: var(--ink);
+  padding: .45rem .8rem; font: 600 .9rem/1 var(--f);
+  box-shadow: 0 6px 34px var(--shadow);
+}
+.pill:hover { border-color: var(--ink); }
+.pill.solid { background: var(--ink); border-color: var(--ink); color: var(--sheet); }
+.pill.solid:hover { background: var(--sheet); color: var(--ink); }
+.pill.lg { padding: .75rem 1.15rem; font-size: 1rem; }
+
+/* hero */
+.hero { padding-block: clamp(48px, 9vw, 112px) 36px; display: grid; gap: 22px; }
+.hero h1 { font-weight: 900; text-transform: uppercase; letter-spacing: -.02em; line-height: .84; font-size: clamp(3.4rem, 13vw, 9.5rem); }
+.hero p { font-size: clamp(1.1rem, 2vw, 1.35rem); font-weight: 500; max-width: 38ch; margin: 0; }
+.hero p b { font-weight: 800; }
+.ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* video frames */
+.frame {
+  position: relative; aspect-ratio: 16 / 9; max-width: 100%; border-radius: var(--r-lg); overflow: hidden;
+  background: var(--screen) center / cover no-repeat; color: var(--on-screen);
+  box-shadow: 0 6px 34px var(--shadow);
+}
+.frame button.play {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0; cursor: pointer; background: transparent; color: inherit;
+  display: grid; place-items: center; font: inherit;
+}
+.frame .disc {
+  width: clamp(52px, 7vw, 76px); aspect-ratio: 1; border-radius: 50%; background: var(--accent);
+  display: grid; place-items: center; transition: transform .18s ease;
+}
+.frame .disc::after { content: ""; border-left: 16px solid #2a2a2b; border-top: 10px solid transparent; border-bottom: 10px solid transparent; margin-left: 5px; }
+.frame button.play:hover .disc { transform: scale(1.08); }
+.frame .cap { position: absolute; left: 14px; bottom: 12px; right: 14px; font-weight: 700; font-size: .9rem; text-shadow: 0 1px 8px rgba(0,0,0,.5); pointer-events: none; }
+.frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.frame .msg { position: absolute; left: 50%; top: calc(50% + 52px); transform: translateX(-50%); width: max-content; max-width: 90%; background: var(--on-screen); color: var(--screen); border-radius: var(--r-sm); padding: .35rem .7rem; font-weight: 700; font-size: .8rem; text-align: center; }
+
+.reel { display: grid; gap: 10px; }
+.row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+section { padding-block: clamp(56px, 9vw, 112px) 0; }
+.sec-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding-bottom: 16px; margin-bottom: 28px; border-bottom: 1.5px solid var(--ink); }
+.sec-head h2 { font-weight: 900; text-transform: uppercase; letter-spacing: -.02em; line-height: .88; font-size: clamp(2.2rem, 6vw, 4.2rem); }
+
+/* featured */
+.featured { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+.feature { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.feature h3 { font-weight: 800; font-size: clamp(1.3rem, 2.4vw, 1.75rem); line-height: 1.1; letter-spacing: -.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 18px; font-weight: 700; font-size: .85rem; color: var(--graphite); }
+.feature p { margin: 0; font-weight: 500; max-width: 52ch; }
+
+/* work grid */
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 24px; }
+.card { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.card h3 { font-weight: 800; font-size: 1.15rem; line-height: 1.15; }
+.card .meta { font-size: .8rem; }
+
+/* clients */
+.clients { font-weight: 900; text-transform: uppercase; letter-spacing: -.01em; line-height: 1.05; font-size: clamp(1.5rem, 4vw, 2.8rem); margin: 0; }
+.clients span { color: var(--accent); font-weight: 400; }
+.agencies { margin-top: 18px; font-weight: 700; font-size: 1rem; color: var(--graphite); }
+
+/* services */
+.services { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; }
+.svc { padding-block: 18px 22px; border-top: 1.5px solid var(--ink); display: grid; gap: 6px; }
+.svc h3 { font-weight: 800; font-size: 1.35rem; line-height: 1.1; }
+.svc p { margin: 0; font-weight: 500; }
+.svc .ex { font-weight: 600; font-size: .9rem; color: var(--graphite); }
+.process { list-style: none; counter-reset: s; margin: 44px 0 0; padding: 18px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px;
+  border-radius: var(--r-lg); background: var(--sheet); box-shadow: 0 6px 34px var(--shadow); }
+.process li { counter-increment: s; display: grid; gap: 4px; align-content: start; }
+.process li::before { content: counter(s); font-weight: 900; font-size: 2.6rem; line-height: .9; }
+.process b { font-weight: 700; font-size: 1rem; }
+.process span { font-size: .9rem; font-weight: 500; color: var(--graphite); }
+
+/* about */
+.about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 48px; }
+.facts { margin: 0; display: grid; gap: 0; }
+.facts div { display: flex; justify-content: space-between; gap: 12px; padding-block: 10px; border-bottom: 1px solid var(--rule); }
+.facts dt { font-weight: 500; color: var(--graphite); }
+.facts dd { margin: 0; font-weight: 800; text-align: right; }
+.about p { margin: 0 0 16px; font-weight: 500; max-width: 62ch; }
+.about .lead { font-weight: 800; font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.1; letter-spacing: -.01em; }
+
+/* contact */
+.contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 48px; align-items: start; }
+.contact h2 { font-weight: 900; text-transform: uppercase; letter-spacing: -.02em; line-height: .88; font-size: clamp(2.4rem, 5.2vw, 4.2rem); margin-block: 8px 4px; }
+.contact p { font-weight: 500; }
+.direct { display: grid; gap: 4px; font-weight: 800; font-size: 1.1rem; margin-top: 18px; }
+form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 20px; border: 0; border-radius: var(--r-lg); background: var(--sheet); box-shadow: 0 6px 34px var(--shadow); }
+form .full { grid-column: 1 / -1; }
+label { display: grid; gap: 6px; font-weight: 600; font-size: .9rem; color: var(--graphite); }
+input, textarea, select { font: 500 1rem/1.4 var(--f); color: var(--ink); background: var(--paper); border: 2px solid var(--paper); border-radius: var(--r-sm); padding: .5rem .65rem; width: 100%; text-transform: none; letter-spacing: 0; }
+textarea { min-height: 120px; resize: vertical; }
+.sent { grid-column: 1 / -1; margin: 0; font-weight: 700; }
+
+footer { margin-top: clamp(64px, 10vw, 120px); border-top: 1.5px solid var(--ink); padding-block: 16px 28px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 860px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .process { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .featured, .services, .about, .contact, form { grid-template-columns: minmax(0, 1fr); }
+  .contact h2 { font-size: clamp(2.4rem, 12vw, 4rem); }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .process { grid-template-columns: minmax(0, 1fr); }
+  .pill { padding: .4rem .55rem; font-size: .85rem; }
+}
+@media (prefers-reduced-motion: reduce) { .frame .disc { transition: none; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#top">Berglund</a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a class="pill" href="#work">Work</a></li>
+        <li><a class="pill" href="#services">Services</a></li>
+        <li><a class="pill" href="#about">About</a></li>
+        <li><a class="pill solid" href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="top">
+    <div class="hero">
+      <span class="eyebrow">Brooklyn animation studio</span>
+      <h1>Drawn from scratch.</h1>
+      <p>Illustrated animation and motion design for editorial, documentary and brand stories. <b>Give us a voice, a script or just an idea, and we'll draw the rest.</b></p>
+      <div class="ctas">
+        <a class="pill solid lg" href="#contact">Start a project</a>
+        <a class="pill lg" href="#work">See the work</a>
+      </div>
+    </div>
+
+    <div class="reel">
+      <div class="frame" data-vimeo="844712997" data-title="Reel"></div>
+      <div class="row"><span class="eyebrow">Reel</span><span class="eyebrow">Animation · Motion design · Illustration</span></div>
+    </div>
+
+    <section id="work">
+      <div class="sec-head"><h2>Featured</h2><span class="eyebrow">Built from the ground up</span></div>
+      <div class="featured">
+        <article class="feature">
+          <div class="frame" data-vimeo="249561188" data-title="Todd Solondz"></div>
+          <h3>Todd Solondz: My Movies Aren't For Everyone</h3>
+          <div class="meta"><span>Topic</span><span>2017</span><span>Direction, boards, illustration, animation, sound, edit</span></div>
+          <p>The brief was a single audio track of Todd Solondz talking about how he makes films. Everything else in this two-minute short was invented from that recording, down to every hand-drawn frame.</p>
+        </article>
+        <article class="feature">
+          <div class="frame" data-vimeo="719170630" data-title="Breaking Bobby Bones"></div>
+          <h3>Breaking Bobby Bones</h3>
+          <div class="meta"><span>National Geographic, with Spaceman</span><span>2021</span><span>Boards, illustration, animation</span></div>
+          <p>A two-minute promo for the National Geographic series, boarded, illustrated and animated from start to finish, plus short Instagram animations for the launch.</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head"><h2>Selected work</h2><span class="eyebrow">12 projects</span></div>
+      <div class="grid">
+        <article class="card"><div class="frame" data-vimeo="766988664" data-title="National Parks"></div><h3>National Parks</h3><div class="meta"><span>National Geographic, with Spaceman</span></div></article>
+        <article class="card"><div class="frame" data-vimeo="842937341" data-title="A Small Light"></div><h3>A Small Light</h3><div class="meta"><span>National Geographic, with Spaceman</span></div></article>
+        <article class="card"><div class="frame" data-vimeo="842897803" data-title="Trafficked"></div><h3>Trafficked</h3><div class="meta"><span>National Geographic, with Spaceman</span></div></article>
+        <article class="card"><div class="frame" data-vimeo="842954811" data-title="Paradise"></div><h3>Paradise: Title Sequence</h3><div class="meta"><span>Brosis Film Studio, dir. Max Isaacson</span></div></article>
+        <article class="card"><div class="frame" data-vimeo="250533498" data-title="We The Economy"></div><h3>We The Economy</h3><div class="meta"><span>Greencard Pictures, dir. Mary Harron</span></div></article>
+        <article class="card"><div class="frame" data-vimeo="250507490" data-title="Crystal"></div><h3>Crystal: End Credits</h3><div class="meta"><span>Dir. Chell Stephens</span></div></article>
+        <article class="card"><div class="frame" data-vimeo="251728680" data-title="Next Level Living"></div><h3>Next Level Living</h3><div class="meta"><span>HuffPost</span><span>Animation, compositing, VFX</span></div></article>
+        <article class="card"><div class="frame" data-vimeo="250364531" data-title="Media Innovation"></div><h3>Media Innovation</h3><div class="meta"><span>Northeastern University</span></div></article>
+        <article class="card"><div class="frame" data-vimeo="272405661" data-title="Capitalism"></div><h3>Capitalism, Ep. 1</h3><div class="meta"><span>Boards, illustration, animation</span></div></article>
+        <article class="card"><div class="frame" data-vimeo="250510958" data-title="Nara"></div><h3>Nara</h3><div class="meta"><span>Animation</span></div></article>
+        <article class="card"><div class="frame" data-vimeo="846386493" data-title="Walk Cycle"></div><h3>Walk Cycle: Man with Hat</h3><div class="meta"><span>Personal</span></div></article>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head"><h2>Made for</h2><span class="eyebrow">Clients</span></div>
+      <p class="clients">Apple <span>/</span> HBO <span>/</span> National Geographic <span>/</span> Topic <span>/</span> HuffPost <span>/</span> DKNY <span>/</span> Hewlett Packard Enterprise</p>
+      <p class="agencies">With agencies including Droga5, BBDO, Mother, Fallon and Hogarth.</p>
+    </section>
+
+    <section id="services">
+      <div class="sec-head"><h2>Services</h2><span class="eyebrow">First idea to final frame</span></div>
+      <div class="services">
+        <div class="svc"><h3>Illustrated animation</h3><p>Editorial, documentary and explainer pieces with a hand-drawn feel. Bring an interview, a script or a rough idea, and we'll find the visual story.</p><span class="ex">Todd Solondz · A Small Light · Capitalism</span></div>
+        <div class="svc"><h3>Title sequences and credits</h3><p>Openers and end credits that set the tone for a film or series before the first scene.</p><span class="ex">Paradise · Crystal</span></div>
+        <div class="svc"><h3>Motion design</h3><p>Stylized motion graphics for brands, networks and campaigns, with 3D camera work in After Effects and Cinema 4D, Maya or Blender when a project calls for it.</p><span class="ex">National Geographic · HuffPost</span></div>
+        <div class="svc"><h3>Illustration and characters</h3><p>Characters, style frames and standalone illustration for campaigns and editorial.</p><span class="ex">TD Bank Five Boro Bike Tour</span></div>
+      </div>
+      <ol class="process">
+        <li><b>Concept</b><span>We talk through your story, audience and deadline, then pitch an approach.</span></li>
+        <li><b>Style frames</b><span>Key frames lock the look before animation starts.</span></li>
+        <li><b>Storyboard</b><span>The piece mapped to your audio or script, so timing is agreed early.</span></li>
+        <li><b>Animation</b><span>Hand-drawn and motion work, plus sound and edit, with set check-ins.</span></li>
+        <li><b>Delivery</b><span>Every format you need, from broadcast to social cut-downs.</span></li>
+      </ol>
+    </section>
+
+    <section id="about">
+      <div class="sec-head"><h2>About</h2><span class="eyebrow">Brooklyn, NY</span></div>
+      <div class="about">
+        <dl class="facts">
+          <div><dt>Founded</dt><dd>2011</dd></div>
+          <div><dt>Experience</dt><dd>20 years</dd></div>
+          <div><dt>Trained</dt><dd>BFA Animation, MCAD</dd></div>
+          <div><dt>Tools</dt><dd>Pencil, After Effects, C4D</dd></div>
+        </dl>
+        <div>
+          <p class="lead">A Brooklyn animation studio built around drawing.</p>
+          <p>The studio is led by Scott Berglund, a creative director, animator, illustrator and motion designer with 20 years of experience. Scott studied animation at the Minneapolis College of Art and Design and began as a motion designer at Fallon and Periscope. His drawing has a sketchy, hand-drawn quality that gives every project a human touch.</p>
+          <p>Berglund stays small on purpose. You work directly with the person drawing your project, and we bring in trusted collaborators when a job calls for more hands.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact">
+        <div>
+          <span class="eyebrow">Contact</span>
+          <h2>Let's make something.</h2>
+          <p>Tell us about your project. A rough idea is plenty to start with.</p>
+          <div class="direct"><span>info@berglundstudio.com</span><span>612-644-2072</span></div>
+        </div>
+        <form id="inquiry">
+          <label>Name<input id="f-name" name="name" autocomplete="name" required></label>
+          <label>Email<input id="f-email" name="email" type="email" autocomplete="email" required></label>
+          <label>Company<input id="f-company" name="company" autocomplete="organization"></label>
+          <label>Timeline<input id="f-when" name="timeline" placeholder="e.g. March launch"></label>
+          <label class="full">What are you making?<textarea id="f-what" name="project"></textarea></label>
+          <label class="full">Budget range (optional)
+            <select id="f-budget" name="budget"><option value="">Choose one</option><option>Under $10k</option><option>$10k to $25k</option><option>$25k to $50k</option><option>$50k and up</option></select>
+          </label>
+          <div class="full"><button class="pill solid lg" type="submit">Send inquiry</button></div>
+          <p class="sent" id="sent" hidden>Thanks. The form connects to info@berglundstudio.com at launch.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap"><span class="eyebrow">© Berglund Studio, Brooklyn</span><span class="eyebrow">info@berglundstudio.com</span></div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  // On the live site, each frame shows its Vimeo still and plays in place.
+  // Inside the claude.ai preview, embedded players and outside images are blocked, so frames stay dark.
+  var live = location.protocol === 'file:' || /(^|\.)berglundstudio\.com$|\.pages\.dev$|^localhost$/.test(location.hostname);
+  document.querySelectorAll('.frame[data-vimeo]').forEach(function (f) {
+    var id = f.dataset.vimeo;
+    var b = document.createElement('button');
+    b.className = 'play'; b.type = 'button';
+    b.setAttribute('aria-label', 'Play ' + f.dataset.title);
+    b.innerHTML = '<span class="disc"></span>';
+    f.appendChild(b);
+    var cap = document.createElement('span'); cap.className = 'cap'; cap.textContent = f.dataset.title; f.appendChild(cap);
+    if (live) {
+      fetch('https://vimeo.com/api/oembed.json?width=1280&url=https://vimeo.com/' + id)
+        .then(function (r) { return r.json(); })
+        .then(function (d) { if (d.thumbnail_url) f.style.backgroundImage = 'url(' + d.thumbnail_url + ')'; })
+        .catch(function () {});
+    }
+    b.addEventListener('click', function () {
+      if (live) {
+        var i = document.createElement('iframe');
+        i.src = 'https://player.vimeo.com/video/' + id + '?autoplay=1&dnt=1';
+        i.allow = 'autoplay; fullscreen; picture-in-picture';
+        i.title = f.dataset.title;
+        f.replaceChildren(i);
+      } else if (!f.querySelector('.msg')) {
+        var m = document.createElement('span'); m.className = 'msg';
+        m.textContent = 'Plays right here on the live site';
+        f.appendChild(m);
+      }
+    });
+  });
+  document.getElementById('inquiry').addEventListener('submit', function (e) {
+    e.preventDefault();
+    document.getElementById('sent').hidden = false;
+  });
+})();
+</script>
+</body>
+</html>
