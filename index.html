@@ -106,7 +106,7 @@ section { padding-block: clamp(56px, 9vw, 112px) 0; }
 .sec-head h2 { font-weight: 900; text-transform: uppercase; letter-spacing: -.02em; line-height: .88; font-size: clamp(2.2rem, 6vw, 4.2rem); }
 
 /* featured */
-.featured { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+.featured { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
 .feature { display: grid; gap: 14px; align-content: start; min-width: 0; }
 .feature h3 { font-weight: 800; font-size: clamp(1.3rem, 2.4vw, 1.75rem); line-height: 1.1; letter-spacing: -.01em; }
 .meta { display: flex; flex-wrap: wrap; gap: 4px 18px; font-weight: 700; font-size: .85rem; color: var(--graphite); }
@@ -161,6 +161,7 @@ footer { margin-top: clamp(64px, 10vw, 120px); border-top: 1.5px solid var(--ink
 footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 
 @media (max-width: 860px) {
+  .featured { grid-template-columns: minmax(0, 1fr); }
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .process { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -220,16 +221,21 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
           <div class="meta"><span>National Geographic, with Spaceman</span><span>2021</span><span>Boards, illustration, animation</span></div>
           <p>A two-minute promo for the National Geographic series, boarded, illustrated and animated from start to finish, plus short Instagram animations for the launch.</p>
         </article>
+        <article class="feature">
+          <div class="frame" data-vimeo="842954811" data-title="Paradise"></div>
+          <h3>Paradise: Title Sequence</h3>
+          <div class="meta"><span>Brosis Film Studio, dir. Max Isaacson</span><span>2023</span><span>Title design, illustration, animation</span></div>
+          <p>An opening title sequence in saturated neon, with every credit designed into the illustration and animated with it.</p>
+        </article>
       </div>
     </section>
 
     <section>
-      <div class="sec-head"><h2>Selected work</h2><span class="eyebrow">12 projects</span></div>
+      <div class="sec-head"><h2>Selected work</h2><span class="eyebrow">10 projects</span></div>
       <div class="grid">
         <article class="card"><div class="frame" data-vimeo="766988664" data-title="National Parks"></div><h3>National Parks</h3><div class="meta"><span>National Geographic, with Spaceman</span></div></article>
         <article class="card"><div class="frame" data-vimeo="842937341" data-title="A Small Light"></div><h3>A Small Light</h3><div class="meta"><span>National Geographic, with Spaceman</span></div></article>
         <article class="card"><div class="frame" data-vimeo="842897803" data-title="Trafficked"></div><h3>Trafficked</h3><div class="meta"><span>National Geographic, with Spaceman</span></div></article>
-        <article class="card"><div class="frame" data-vimeo="842954811" data-title="Paradise"></div><h3>Paradise: Title Sequence</h3><div class="meta"><span>Brosis Film Studio, dir. Max Isaacson</span></div></article>
         <article class="card"><div class="frame" data-vimeo="250533498" data-title="We The Economy"></div><h3>We The Economy</h3><div class="meta"><span>Greencard Pictures, dir. Mary Harron</span></div></article>
         <article class="card"><div class="frame" data-vimeo="250507490" data-title="Crystal"></div><h3>Crystal: End Credits</h3><div class="meta"><span>Dir. Chell Stephens</span></div></article>
         <article class="card"><div class="frame" data-vimeo="251728680" data-title="Next Level Living"></div><h3>Next Level Living</h3><div class="meta"><span>HuffPost</span><span>Animation, compositing, VFX</span></div></article>
