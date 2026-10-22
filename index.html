@@ -86,6 +86,7 @@ nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap
 .frame .disc::after { content: ""; border-left: 16px solid #2a2a2b; border-top: 10px solid transparent; border-bottom: 10px solid transparent; margin-left: 5px; }
 .frame button.play:hover .disc { transform: scale(1.08); }
 .frame .cap { position: absolute; left: 14px; bottom: 12px; right: 14px; font-weight: 700; font-size: .9rem; text-shadow: 0 1px 8px rgba(0,0,0,.5); pointer-events: none; }
+.frame.tall { background-size: contain; background-color: #000; }  /* vertical videos: whole still on black, no crop */
 .frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .frame .fs {
   position: absolute; top: 10px; right: 10px; z-index: 3; width: 36px; height: 36px; border: 0; border-radius: var(--r-sm);
@@ -93,9 +94,8 @@ nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap
 }
 .frame .fs:hover, .frame .fs:focus-visible { opacity: 1; background: rgba(42,42,43,.85); }
 .frame .fs svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.frame:has(iframe):not(:fullscreen) .fs { display: none; }  /* the Vimeo player shows its own full screen button once playing */
-.frame:fullscreen { border-radius: 0; box-shadow: none; background-color: #000; }
-.frame:-webkit-full-screen { border-radius: 0; box-shadow: none; background-color: #000; width: 100%; height: 100%; }
+.lb-frame:fullscreen { border-radius: 0; box-shadow: none; width: 100%; height: 100%; transform: none; }
+.lb-frame:-webkit-full-screen { border-radius: 0; box-shadow: none; width: 100%; height: 100%; transform: none; }
 .frame .msg { position: absolute; left: 50%; top: calc(50% + 52px); transform: translateX(-50%); width: max-content; max-width: 90%; background: var(--on-screen); color: var(--screen); border-radius: var(--r-sm); padding: .35rem .7rem; font-weight: 700; font-size: .8rem; text-align: center; }
 
 .reel { display: grid; gap: 10px; }
@@ -175,7 +175,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
 /* Featured videos open large and centered */
 .lightbox { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; background: rgba(28,24,22,.88); opacity: 0; transition: opacity .3s ease; }
 .lightbox.open { opacity: 1; }
-.lb-frame { position: relative; width: min(100%, calc((100vh - 120px) * 16 / 9), 1400px); aspect-ratio: 16 / 9; border-radius: var(--r-lg); overflow: hidden; background: #000; box-shadow: 0 20px 80px rgba(0,0,0,.45); transform-origin: 0 0; transition: transform .4s cubic-bezier(.2,.7,.2,1); }
+.lb-frame { position: relative; width: min(100%, calc((100vh - 120px) * var(--ar, 1.7778)), 1400px); aspect-ratio: var(--ar, 1.7778); border-radius: var(--r-lg); overflow: hidden; background: #000; box-shadow: 0 20px 80px rgba(0,0,0,.45); transform-origin: 0 0; transition: transform .4s cubic-bezier(.2,.7,.2,1); }
 .lb-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .lb-close { position: absolute; top: 14px; right: 14px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--on-screen); color: var(--ink); cursor: pointer; display: grid; place-items: center; }
 .lb-close svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; fill: none; }
@@ -367,6 +367,7 @@ body.lb-on { overflow: hidden; }
   var lbFrame = lb.querySelector('.lb-frame'), lbClose = lb.querySelector('.lb-close'), lbFrom = null;
   function closeLightbox() {
     if (lb.hidden) return;
+    if (document.fullscreenElement) document.exitFullscreen();
     lb.classList.remove('open');
     lbFrame.innerHTML = '';
     document.body.classList.remove('lb-on');
@@ -375,6 +376,7 @@ body.lb-on { overflow: hidden; }
   }
   function openLightbox(f, id, title, opener) {
     lbFrom = opener;
+    lbFrame.style.setProperty('--ar', f.dataset.ar || '1.7778');
     lb.querySelector('.lb-title').textContent = title;
     lbFrame.appendChild(makePlayer(id, title, closeLightbox));
     lb.hidden = false;
@@ -403,7 +405,13 @@ body.lb-on { overflow: hidden; }
     if (live) {
       fetch('https://vimeo.com/api/oembed.json?width=1280&url=https://vimeo.com/' + id)
         .then(function (r) { return r.json(); })
-        .then(function (d) { if (d.thumbnail_url) f.style.backgroundImage = 'url(' + d.thumbnail_url + ')'; })
+        .then(function (d) {
+          if (d.thumbnail_url) f.style.backgroundImage = 'url(' + d.thumbnail_url + ')';
+          if (d.width && d.height) {
+            f.dataset.ar = (d.width / d.height).toFixed(4);
+            if (d.width < d.height) f.classList.add('tall');
+          }
+        })
         .catch(function () {});
     }
     var fs = document.createElement('button');
@@ -413,39 +421,23 @@ body.lb-on { overflow: hidden; }
     fs.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 5V1h4M11 1h4v4M15 11v4h-4M5 15H1v-4"/></svg>';
     f.appendChild(fs);
 
-    function play() {
-      if (!live) {
-        if (!f.querySelector('.msg')) {
-          var m = document.createElement('span'); m.className = 'msg';
-          m.textContent = 'Plays right here on the live site';
-          f.appendChild(m);
-        }
-        return false;
+    // Inside the claude.ai preview the player can't load, so say where it plays.
+    function blocked() {
+      if (!f.querySelector('.msg')) {
+        var m = document.createElement('span'); m.className = 'msg';
+        m.textContent = 'Plays right here on the live site';
+        f.appendChild(m);
       }
-      if (!f.querySelector('iframe')) {
-        var i = makePlayer(id, f.dataset.title, function () {
-          // Back to the still and play button when the video ends.
-          if (document.fullscreenElement === f) document.exitFullscreen();
-          i.remove(); f.insertBefore(b, fs); f.insertBefore(cap, fs);
-        });
-        b.remove(); cap.remove();
-        f.insertBefore(i, fs);
-      }
-      return true;
     }
-    var featured = !!f.closest('.feature');
+    // Every video opens large and centered, at its own shape.
     b.addEventListener('click', function () {
-      if (featured && live) openLightbox(f, id, f.dataset.title, b);
-      else play();
+      if (live) openLightbox(f, id, f.dataset.title, b); else blocked();
     });
     fs.addEventListener('click', function () {
-      if (!play()) return;
-      if (document.fullscreenElement || document.webkitFullscreenElement) {
-        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-        return;
-      }
-      var req = f.requestFullscreen || f.webkitRequestFullscreen;
-      if (req) req.call(f);
+      if (!live) return blocked();
+      openLightbox(f, id, f.dataset.title, fs);
+      var req = lbFrame.requestFullscreen || lbFrame.webkitRequestFullscreen;
+      if (req) req.call(lbFrame);
     });
   });
   document.getElementById('inquiry').addEventListener('submit', function (e) {
