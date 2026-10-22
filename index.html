@@ -344,6 +344,7 @@ body.lb-on { overflow: hidden; }
     i.setAttribute('allowfullscreen', '');
     i.title = title;
     i._onEnd = onEnd;
+    i._paused = true;  // until the player reports it started
     return i;
   }
   // Vimeo shows "more videos" thumbnails when a video ends. Listen for the end
@@ -354,7 +355,11 @@ body.lb-on { overflow: hidden; }
     if (!d || !d.event) return;
     var i = Array.prototype.find.call(document.querySelectorAll('iframe'), function (x) { return x.contentWindow === e.source; });
     if (!i) return;
-    if (d.event === 'ready') i.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'finish' }), e.origin);
+    if (d.event === 'ready') ['finish', 'play', 'pause'].forEach(function (v) {
+      i.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: v }), e.origin);
+    });
+    if (d.event === 'play') i._paused = false;
+    if (d.event === 'pause') i._paused = true;
     if (d.event === 'finish' && i._onEnd) i._onEnd();
   });
 
@@ -393,7 +398,16 @@ body.lb-on { overflow: hidden; }
   }
   lbClose.addEventListener('click', closeLightbox);
   lb.addEventListener('click', function (e) { if (e.target === lb) closeLightbox(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
+  document.addEventListener('keydown', function (e) {
+    if (lb.hidden) return;
+    if (e.key === 'Escape') closeLightbox();
+    // Space plays and pauses, like a video player, instead of pressing the close button.
+    if (e.key === ' ' || e.code === 'Space') {
+      e.preventDefault();
+      var i = lbFrame.querySelector('iframe');
+      if (i) i.contentWindow.postMessage(JSON.stringify({ method: i._paused ? 'play' : 'pause' }), 'https://player.vimeo.com');
+    }
+  });
   document.querySelectorAll('.frame[data-vimeo]').forEach(function (f) {
     var id = f.dataset.vimeo;
     var b = document.createElement('button');
