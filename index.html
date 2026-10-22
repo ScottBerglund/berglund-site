@@ -256,7 +256,7 @@ body.lb-on { overflow: hidden; }
         <article class="card"><div class="frame" data-vimeo="250364531" data-title="Media Innovation"></div><h3>Media Innovation</h3><div class="meta"><span>Northeastern University</span></div></article>
         <article class="card"><div class="frame" data-vimeo="272405661" data-title="Capitalism"></div><h3>Capitalism, Ep. 1</h3><div class="meta"><span>Boards, illustration, animation</span></div></article>
         <article class="card"><div class="frame" data-vimeo="250510958" data-title="Nara"></div><h3>Nara</h3><div class="meta"><span>Animation</span></div></article>
-        <article class="card"><div class="frame" data-vimeo="846386493" data-title="Walk Cycle"></div><h3>Walk Cycle: Man with Hat</h3><div class="meta"><span>Personal</span></div></article>
+        <article class="card"><div class="frame" data-vimeo="846386493" data-title="Walk Cycle" data-loop></div><h3>Walk Cycle: Man with Hat</h3><div class="meta"><span>Personal</span></div></article>
       </div>
     </section>
 
@@ -336,10 +336,10 @@ body.lb-on { overflow: hidden; }
   var live = location.protocol === 'file:' || /(^|\.)berglundstudio\.com$|\.pages\.dev$|^localhost$/.test(location.hostname);
 
   // Clean player: no title, byline or portrait overlay.
-  function playerSrc(id) { return 'https://player.vimeo.com/video/' + id + '?autoplay=1&dnt=1&title=0&byline=0&portrait=0'; }
-  function makePlayer(id, title, onEnd) {
+  function playerSrc(id, loop) { return 'https://player.vimeo.com/video/' + id + '?autoplay=1&dnt=1&title=0&byline=0&portrait=0' + (loop ? '&loop=1' : ''); }
+  function makePlayer(id, title, onEnd, loop) {
     var i = document.createElement('iframe');
-    i.src = playerSrc(id);
+    i.src = playerSrc(id, loop);
     i.allow = 'autoplay; fullscreen; picture-in-picture';
     i.setAttribute('allowfullscreen', '');
     i.title = title;
@@ -378,7 +378,7 @@ body.lb-on { overflow: hidden; }
     lbFrom = opener;
     lbFrame.style.setProperty('--ar', f.dataset.ar || '1.7778');
     lb.querySelector('.lb-title').textContent = title;
-    lbFrame.appendChild(makePlayer(id, title, closeLightbox));
+    lbFrame.appendChild(makePlayer(id, title, closeLightbox, 'loop' in f.dataset));  // data-loop: plays on repeat until closed
     lb.hidden = false;
     document.body.classList.add('lb-on');
     // Grow out of the card: start at the card's spot and size, then ease to the center.
