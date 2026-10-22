@@ -172,7 +172,16 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
   .process { grid-template-columns: minmax(0, 1fr); }
   .pill { padding: .4rem .55rem; font-size: .85rem; }
 }
-@media (prefers-reduced-motion: reduce) { .frame .disc { transition: none; } }
+/* Featured videos open large and centered */
+.lightbox { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; background: rgba(28,24,22,.88); opacity: 0; transition: opacity .3s ease; }
+.lightbox.open { opacity: 1; }
+.lb-frame { position: relative; width: min(100%, calc((100vh - 120px) * 16 / 9), 1400px); aspect-ratio: 16 / 9; border-radius: var(--r-lg); overflow: hidden; background: #000; box-shadow: 0 20px 80px rgba(0,0,0,.45); transform-origin: 0 0; transition: transform .4s cubic-bezier(.2,.7,.2,1); }
+.lb-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.lb-close { position: absolute; top: 14px; right: 14px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--on-screen); color: var(--ink); cursor: pointer; display: grid; place-items: center; }
+.lb-close svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; fill: none; }
+.lb-title { position: absolute; left: 20px; top: 24px; color: var(--on-screen); font-weight: 800; font-size: 1rem; max-width: calc(100% - 100px); }
+body.lb-on { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .frame .disc, .lightbox, .lb-frame { transition: none; } }
 </style>
 </head>
 <body>
@@ -325,6 +334,64 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
   // On the live site, each frame shows its Vimeo still and plays in place.
   // Inside the claude.ai preview, embedded players and outside images are blocked, so frames stay dark.
   var live = location.protocol === 'file:' || /(^|\.)berglundstudio\.com$|\.pages\.dev$|^localhost$/.test(location.hostname);
+
+  // Clean player: no title, byline or portrait overlay.
+  function playerSrc(id) { return 'https://player.vimeo.com/video/' + id + '?autoplay=1&dnt=1&title=0&byline=0&portrait=0'; }
+  function makePlayer(id, title, onEnd) {
+    var i = document.createElement('iframe');
+    i.src = playerSrc(id);
+    i.allow = 'autoplay; fullscreen; picture-in-picture';
+    i.setAttribute('allowfullscreen', '');
+    i.title = title;
+    i._onEnd = onEnd;
+    return i;
+  }
+  // Vimeo shows "more videos" thumbnails when a video ends. Listen for the end
+  // through the player's message API and close the player before that screen appears.
+  window.addEventListener('message', function (e) {
+    if (!/^https:\/\/player\.vimeo\.com$/.test(e.origin)) return;
+    var d; try { d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch (err) { return; }
+    if (!d || !d.event) return;
+    var i = Array.prototype.find.call(document.querySelectorAll('iframe'), function (x) { return x.contentWindow === e.source; });
+    if (!i) return;
+    if (d.event === 'ready') i.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'finish' }), e.origin);
+    if (d.event === 'finish' && i._onEnd) i._onEnd();
+  });
+
+  // One shared lightbox for the Featured videos.
+  var lb = document.createElement('div');
+  lb.className = 'lightbox'; lb.hidden = true;
+  lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true');
+  lb.innerHTML = '<span class="lb-title"></span><button class="lb-close" type="button" aria-label="Close video"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg></button><div class="lb-frame"></div>';
+  document.body.appendChild(lb);
+  var lbFrame = lb.querySelector('.lb-frame'), lbClose = lb.querySelector('.lb-close'), lbFrom = null;
+  function closeLightbox() {
+    if (lb.hidden) return;
+    lb.classList.remove('open');
+    lbFrame.innerHTML = '';
+    document.body.classList.remove('lb-on');
+    setTimeout(function () { lb.hidden = true; }, 300);
+    if (lbFrom) lbFrom.focus();
+  }
+  function openLightbox(f, id, title, opener) {
+    lbFrom = opener;
+    lb.querySelector('.lb-title').textContent = title;
+    lbFrame.appendChild(makePlayer(id, title, closeLightbox));
+    lb.hidden = false;
+    document.body.classList.add('lb-on');
+    // Grow out of the card: start at the card's spot and size, then ease to the center.
+    var a = f.getBoundingClientRect(), b = lbFrame.getBoundingClientRect();
+    lbFrame.style.transition = 'none';
+    lbFrame.style.transform = 'translate(' + (a.left - b.left) + 'px,' + (a.top - b.top) + 'px) scale(' + (a.width / b.width) + ')';
+    lbFrame.getBoundingClientRect();
+    lbFrame.style.transition = '';
+    lbFrame.style.transform = '';
+    lb.classList.add('open');
+    lbClose.focus();
+  }
+  lbClose.addEventListener('click', closeLightbox);
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLightbox(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
   document.querySelectorAll('.frame[data-vimeo]').forEach(function (f) {
     var id = f.dataset.vimeo;
     var b = document.createElement('button');
@@ -356,17 +423,21 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
         return false;
       }
       if (!f.querySelector('iframe')) {
-        var i = document.createElement('iframe');
-        i.src = 'https://player.vimeo.com/video/' + id + '?autoplay=1&dnt=1';
-        i.allow = 'autoplay; fullscreen; picture-in-picture';
-        i.setAttribute('allowfullscreen', '');
-        i.title = f.dataset.title;
+        var i = makePlayer(id, f.dataset.title, function () {
+          // Back to the still and play button when the video ends.
+          if (document.fullscreenElement === f) document.exitFullscreen();
+          i.remove(); f.insertBefore(b, fs); f.insertBefore(cap, fs);
+        });
         b.remove(); cap.remove();
         f.insertBefore(i, fs);
       }
       return true;
     }
-    b.addEventListener('click', play);
+    var featured = !!f.closest('.feature');
+    b.addEventListener('click', function () {
+      if (featured && live) openLightbox(f, id, f.dataset.title, b);
+      else play();
+    });
     fs.addEventListener('click', function () {
       if (!play()) return;
       if (document.fullscreenElement || document.webkitFullscreenElement) {
