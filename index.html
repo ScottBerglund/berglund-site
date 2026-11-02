@@ -209,22 +209,11 @@ body.lb-on { overflow: hidden; }
   .js .sec-head::after { display: none; }
 }
 /* Bright accents: each colour is a marker, never body text */
-nav a.pill[href="#work"] { color: var(--blue); }
-nav a.pill[href="#services"] { color: var(--coral); }
-nav a.pill[href="#about"] { color: var(--orange); }
-nav a.pill.solid { background: var(--purple); border-color: var(--purple); color: #fff; }
-nav a.pill.solid:hover { background: var(--sheet); color: var(--purple); }
-nav a.pill:not(.solid):hover { border-color: currentColor; }
+nav a.pill.solid { background: var(--blue); border-color: var(--blue); color: #fff; }
+nav a.pill.solid:hover { background: var(--sheet); color: var(--blue); }
 .hero h1 .dot { color: var(--coral); }
-.process li:nth-child(1)::before { color: var(--blue); }
-.process li:nth-child(2)::before { color: var(--coral); }
-.process li:nth-child(3)::before { color: var(--orange); }
-.process li:nth-child(4)::before { color: var(--green); }
-.process li:nth-child(5)::before { color: var(--purple); }
-.svc:nth-child(1) { border-top-color: var(--blue); }
-.svc:nth-child(2) { border-top-color: var(--coral); }
-.svc:nth-child(3) { border-top-color: var(--orange); }
-.svc:nth-child(4) { border-top-color: var(--green); }
+.process li::before { color: var(--blue); }
+.svc { border-top-color: var(--blue); }
 .svc { border-top-width: 3px; }
 </style>
 </head>
@@ -547,11 +536,9 @@ nav a.pill:not(.solid):hover { border-color: currentColor; }
     });
   });
 })();
-// Bright palette: play buttons and client slashes cycle through the planner's accents.
+// Bright palette: one accent per area. Play buttons coral, client slashes orange, services blue.
 (function () {
-  var cs = [['#2196f3','#fff'],['#f26b5b','#fff'],['#f59a12','#23374a'],['#8bc53f','#23374a'],['#6e3fbf','#fff'],['#00bcd4','#23374a'],['#f98bc9','#23374a'],['#ffe600','#23374a']];
-  document.querySelectorAll('.frame').forEach(function (f, i) { var c = cs[i % cs.length]; f.style.setProperty('--c', c[0]); f.style.setProperty('--ct', c[1]); });
-  document.querySelectorAll('.clients').forEach(function (p) { p.querySelectorAll('span').forEach(function (sp, i) { sp.style.setProperty('--c', cs[i % cs.length][0]); }); });
+  document.querySelectorAll('.clients span').forEach(function (sp) { sp.style.setProperty('--c', 'var(--orange)'); });
 })();
 </script>
 </body>
