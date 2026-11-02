@@ -17,16 +17,19 @@
 <style>
 /* Layout: a printed sheet on grid paper. One ink on paper, giant heavy headings, wide-spaced small caps, thin lines, rounded frames for the work. */
 :root {
-  --paper: #d8cdc6;
-  --sheet: #efebe7;
-  --ink: #2a2a2b;
-  --graphite: #6e6460;
-  --rule: #c3b6ae;
-  --grid: #b9aaa1;     /* paper dots */
-  --accent: #ee7a7a;   /* one meaning: play */
-  --screen: #2a2a2b;   /* video frames before they load */
-  --on-screen: #efebe7;
-  --shadow: rgba(60,40,30,.07);
+  /* Bright palette from Scott's planner: light grey paper, white cards, deep navy ink, eight vivid accents. */
+  --paper: #f4f5f7;
+  --sheet: #ffffff;
+  --ink: #23374a;
+  --graphite: #6c7b88;
+  --rule: #dce1e6;
+  --grid: #c9d0d7;     /* paper dots */
+  --accent: #f26b5b;
+  --screen: #23374a;   /* video frames before they load */
+  --on-screen: #ffffff;
+  --shadow: rgba(35,55,74,.08);
+  --blue: #2196f3; --coral: #f26b5b; --orange: #f59a12; --green: #8bc53f;
+  --purple: #6e3fbf; --yellow: #ffe600; --cyan: #00bcd4; --pink: #f98bc9;
   --f: "Red Hat Display", "Arial Black", system-ui, -apple-system, sans-serif;
   --r-sm: 6px; --r: 10px; --r-lg: 14px;
 }
@@ -81,19 +84,19 @@ nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap
   display: grid; place-items: center; font: inherit;
 }
 .frame .disc {
-  width: clamp(52px, 7vw, 76px); aspect-ratio: 1; border-radius: 50%; background: var(--accent);
+  width: clamp(52px, 7vw, 76px); aspect-ratio: 1; border-radius: 50%; background: var(--c, var(--accent));
   display: grid; place-items: center; transition: transform .18s ease;
 }
-.frame .disc::after { content: ""; border-left: 16px solid #2a2a2b; border-top: 10px solid transparent; border-bottom: 10px solid transparent; margin-left: 5px; }
+.frame .disc::after { content: ""; border-left: 16px solid var(--ct, #fff); border-top: 10px solid transparent; border-bottom: 10px solid transparent; margin-left: 5px; }
 .frame button.play:hover .disc { transform: scale(1.08); }
 .frame .cap { position: absolute; left: 14px; bottom: 12px; right: 14px; font-weight: 700; font-size: .9rem; text-shadow: 0 1px 8px rgba(0,0,0,.5); pointer-events: none; }
 .frame.tall { background-size: contain; background-color: #000; }  /* vertical videos: whole still on black, no crop */
 .frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .frame .fs {
   position: absolute; top: 10px; right: 10px; z-index: 3; width: 36px; height: 36px; border: 0; border-radius: var(--r-sm);
-  background: rgba(42,42,43,.55); color: #efebe7; cursor: pointer; display: grid; place-items: center; opacity: .85; transition: opacity .15s;
+  background: rgba(35,55,74,.55); color: #fff; cursor: pointer; display: grid; place-items: center; opacity: .85; transition: opacity .15s;
 }
-.frame .fs:hover, .frame .fs:focus-visible { opacity: 1; background: rgba(42,42,43,.85); }
+.frame .fs:hover, .frame .fs:focus-visible { opacity: 1; background: rgba(35,55,74,.85); }
 .frame .fs svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .lb-frame:fullscreen { border-radius: 0; box-shadow: none; width: 100%; height: 100%; transform: none; }
 .lb-frame:-webkit-full-screen { border-radius: 0; box-shadow: none; width: 100%; height: 100%; transform: none; }
@@ -121,7 +124,7 @@ section { padding-block: clamp(56px, 9vw, 112px) 0; }
 
 /* clients */
 .clients { font-weight: 900; text-transform: uppercase; letter-spacing: -.01em; line-height: 1.05; font-size: clamp(1.5rem, 4vw, 2.8rem); margin: 0; }
-.clients span { color: var(--accent); font-weight: 400; }
+.clients span { color: var(--c, var(--accent)); font-weight: 400; }
 .agencies { margin-top: 18px; font-weight: 700; font-size: 1rem; color: var(--graphite); }
 
 /* services */
@@ -174,7 +177,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
   .pill { padding: .4rem .55rem; font-size: .85rem; }
 }
 /* Featured videos open large and centered */
-.lightbox { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; background: rgba(28,24,22,.88); opacity: 0; transition: opacity .3s ease; }
+.lightbox { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; background: rgba(35,55,74,.9); opacity: 0; transition: opacity .3s ease; }
 .lightbox.open { opacity: 1; }
 .lb-frame { position: relative; width: min(100%, calc((100vh - 120px) * var(--ar, 1.7778)), 1400px); aspect-ratio: var(--ar, 1.7778); border-radius: var(--r-lg); overflow: hidden; background: #000; box-shadow: 0 20px 80px rgba(0,0,0,.45); transform-origin: 0 0; transition: transform .4s cubic-bezier(.2,.7,.2,1); }
 .lb-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
@@ -205,6 +208,13 @@ body.lb-on { overflow: hidden; }
   .js .sec-head { border-bottom-color: var(--ink); }
   .js .sec-head::after { display: none; }
 }
+/* Bright accents: each colour is a marker, never body text */
+nav a.pill.solid { background: var(--blue); border-color: var(--blue); color: #fff; }
+nav a.pill.solid:hover { background: var(--sheet); color: var(--blue); }
+.hero h1 .dot { color: var(--coral); }
+.process li::before { color: var(--blue); }
+.svc { border-top-color: var(--blue); }
+.svc { border-top-width: 3px; }
 </style>
 </head>
 <body>
@@ -225,7 +235,7 @@ body.lb-on { overflow: hidden; }
   <main id="top">
     <div class="hero">
       <span class="eyebrow">Brooklyn animation studio</span>
-      <h1>Drawn from scratch.</h1>
+      <h1>Drawn from scratch<span class="dot">.</span></h1>
       <p>Illustrated animation and motion design for editorial, documentary and brand stories. <b>Give us a voice, a script or just an idea, and we'll draw the rest.</b></p>
       <div class="ctas">
         <a class="pill solid lg" href="#contact">Start a project</a>
@@ -525,6 +535,10 @@ body.lb-on { overflow: hidden; }
       io.observe(el);
     });
   });
+})();
+// Bright palette: one accent per area. Play buttons coral, client slashes orange, services blue.
+(function () {
+  document.querySelectorAll('.clients span').forEach(function (sp) { sp.style.setProperty('--c', 'var(--orange)'); });
 })();
 </script>
 </body>
