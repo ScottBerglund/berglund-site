@@ -503,7 +503,7 @@ body.lb-on { overflow: hidden; }
     list.parentNode.insertBefore(ticker, list.nextSibling);
     var setSpeed = function () {
       ticker.querySelectorAll('.track').forEach(function (tr) {
-        tr.style.setProperty('--dur', (tr.scrollWidth / 2 / 55) + 's');  // about 55 px per second
+        tr.style.setProperty('--dur', (tr.scrollWidth / 2 / 27) + 's');  // about 27 px per second
       });
     };
     setSpeed();
