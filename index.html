@@ -184,17 +184,6 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
 body.lb-on { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { .frame .disc, .lightbox, .lb-frame { transition: none; } }
 /* ---- Motion: drawn-on headline, client ticker, scroll reveals ---- */
-.js .hero h1 { visibility: hidden; }
-.js .hero h1.drawn { visibility: visible; }
-.hero h1 .w { display: inline-block; vertical-align: baseline; overflow: visible; height: .7em; }
-.hero h1 .w text { fill: var(--ink); fill-opacity: 0; stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round;
-  stroke-dasharray: 900; stroke-dashoffset: 900; animation: draw-line 1.5s cubic-bezier(.5,.1,.3,1) forwards, ink-in .6s ease forwards; }
-@keyframes draw-line { to { stroke-dashoffset: 0; } }
-@keyframes ink-in { to { fill-opacity: 1; } }
-.js .hero > p, .js .hero .ctas { opacity: 0; transform: translateY(14px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
-.hero.go > p, .hero.go .ctas { opacity: 1; transform: none; }
-.hero.go .ctas { transition-delay: .15s; }
-
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .ticker { display: grid; gap: 6px; width: 100vw; margin-inline: calc(50% - 50vw);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
@@ -213,8 +202,7 @@ body { overflow-x: clip; }
 .js .sec-head.in::after { transform: scaleX(1); }
 
 @media (prefers-reduced-motion: reduce) {
-  .js .hero h1 { visibility: visible; }
-  .js .rv, .js .hero > p, .js .hero .ctas { opacity: 1; transform: none; transition: none; }
+  .js .rv { opacity: 1; transform: none; transition: none; }
   .js .sec-head { border-bottom-color: var(--ink); }
   .js .sec-head::after { display: none; }
 }
@@ -497,46 +485,8 @@ body { overflow-x: clip; }
 // ---- Motion ----
 (function () {
   var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var NS = 'http://www.w3.org/2000/svg';
 
-  // 1. The headline draws itself in a pencil line, word by word, then inks in.
-  var h1 = document.querySelector('.hero h1'), hero = document.querySelector('.hero');
-  function showHero() { h1.classList.add('drawn'); hero.classList.add('go'); }
-  function drawHeadline() {
-    if (h1.dataset.built) return;
-    h1.dataset.built = '1';
-    var words = h1.textContent.trim().split(/\s+/);
-    h1.setAttribute('aria-label', h1.textContent.trim());
-    h1.textContent = '';
-    words.forEach(function (w, i) {
-      var svg = document.createElementNS(NS, 'svg');
-      svg.setAttribute('class', 'w'); svg.setAttribute('aria-hidden', 'true');
-      var t = document.createElementNS(NS, 'text');
-      t.setAttribute('x', '0'); t.setAttribute('y', '0');
-      t.setAttribute('font-size', '100'); t.setAttribute('font-weight', '900');
-      t.setAttribute('letter-spacing', '-2');
-      t.setAttribute('font-family', getComputedStyle(h1).fontFamily);
-      t.textContent = w.toUpperCase();
-      t.style.animationDelay = (i * .45) + 's, ' + (words.length * .45 + .9) + 's';
-      svg.appendChild(t);
-      h1.appendChild(svg);
-      if (i < words.length - 1) h1.appendChild(document.createTextNode(' '));
-      var len = t.getComputedTextLength();
-      var cap = 70;  // capital height in this face at size 100
-      svg.setAttribute('viewBox', '0 ' + (-cap) + ' ' + len + ' ' + cap);
-      svg.style.width = (len / 100) + 'em';
-    });
-    showHero();
-  }
-  if (still) { showHero(); }
-  else {
-    var done = false;
-    var go = function () { if (!done) { done = true; drawHeadline(); } };
-    if (document.fonts && document.fonts.load) document.fonts.load('900 100px "Red Hat Display"').then(go, go);
-    setTimeout(go, 1500);  // never leave the headline hidden
-  }
-
-  // 2. The client list rolls past in two rows, like credits, in opposite directions.
+  // 1. The client list rolls past in two rows, like credits, in opposite directions.
   var list = document.querySelector('p.clients');
   if (list && !still) {
     var names = list.textContent.split('/').map(function (n) { return n.trim(); }).filter(Boolean);
@@ -561,9 +511,9 @@ body { overflow-x: clip; }
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(setSpeed);
   }
 
-  // 3. Sections and projects ease into place as they scroll into view.
+  // 2. Sections and projects ease into place as they scroll into view.
   if (still || !('IntersectionObserver' in window)) return;
-  var groups = ['.reel', '.sec-head', '.feature', '.card', '.svc', '.process li', '.facts', '.about > div', '.ticker', '.contact > div', '#inquiry'];
+  var groups = ['.sec-head', '.feature', '.card', '.svc', '.process li', '.facts', '.about > div', '.ticker', '.contact > div', '#inquiry'];
   var io = new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { rootMargin: '0px 0px -8% 0px', threshold: .12 });
@@ -576,8 +526,6 @@ body { overflow-x: clip; }
       io.observe(el);
     });
   });
-  // The reel sits just under the headline; bring it in once the headline starts.
-  var reel = document.querySelector('.reel'); if (reel) reel.style.setProperty('--d', '.6s');
 })();
 </script>
 </body>
