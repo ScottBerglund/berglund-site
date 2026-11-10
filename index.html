@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Berglund is a Brooklyn animation studio making illustrated, hand-drawn animation and motion design for editorial, documentary and brand stories.">
+<meta name="description" content="Berglund is a Brooklyn animation studio making illustrated, hand-drawn animation and motion design for editorial, documentary, nonprofit and brand stories.">
 <meta property="og:title" content="Berglund Studio">
 <meta property="og:description" content="Illustrated animation and motion design, drawn from scratch. Brooklyn, NY.">
 <meta property="og:type" content="website">
@@ -119,6 +119,25 @@ section { padding-block: clamp(56px, 9vw, 112px) 0; }
 .card h3 { font-weight: 800; font-size: 1.15rem; line-height: 1.15; }
 .card .meta { font-size: .8rem; }
 
+/* packages */
+.packages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.pkg { display: grid; gap: 8px; align-content: start; padding: 20px; border-radius: var(--r-lg); background: var(--sheet); box-shadow: 0 6px 34px var(--shadow); }
+.pkg h3 { font-weight: 800; font-size: 1.3rem; line-height: 1.1; }
+.pkg p { margin: 0; font-weight: 500; }
+.pkg .for { font-weight: 600; font-size: .85rem; color: var(--graphite); }
+.pkg .terms { display: flex; justify-content: space-between; gap: 12px; margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--rule); font-weight: 800; font-size: .95rem; }
+.pkg .terms span:first-child { font-weight: 600; color: var(--graphite); }
+.pkg.start { outline: 1.5px solid var(--ink); grid-column: 1 / -1; }
+.pkg.start p { max-width: 60ch; }
+.pkg .tag { justify-self: start; background: var(--ink); color: var(--sheet); border-radius: var(--r-sm); padding: .25rem .5rem; font-weight: 700; font-size: .75rem; }
+.desk { margin-top: 44px; display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 18px 48px; align-items: start; }
+.desk h3 { font-weight: 800; font-size: 1.35rem; line-height: 1.1; }
+.desk p { margin: 6px 0 0; font-weight: 500; }
+.desk .tier { padding-top: 14px; border-top: 1.5px solid var(--ink); display: grid; gap: 4px; }
+.desk .tier b { font-weight: 800; font-size: 1.1rem; }
+.desk .tier span { font-weight: 600; font-size: .9rem; color: var(--graphite); }
+.pk-note { margin: 28px 0 0; font-weight: 500; font-size: .9rem; color: var(--graphite); }
+
 /* clients */
 .clients { font-weight: 900; text-transform: uppercase; letter-spacing: -.01em; line-height: 1.05; font-size: clamp(1.5rem, 4vw, 2.8rem); margin: 0; }
 .clients span { color: var(--accent); font-weight: 400; }
@@ -164,10 +183,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wr
 @media (max-width: 860px) {
   .featured { grid-template-columns: minmax(0, 1fr); }
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .process { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .process, .packages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
-  .featured, .services, .about, .contact, form { grid-template-columns: minmax(0, 1fr); }
+  .featured, .services, .packages, .desk, .about, .contact, form { grid-template-columns: minmax(0, 1fr); }
   .contact h2 { font-size: clamp(2.4rem, 12vw, 4rem); }
   .grid { grid-template-columns: minmax(0, 1fr); }
   .process { grid-template-columns: minmax(0, 1fr); }
@@ -216,6 +235,7 @@ body.lb-on { overflow: hidden; }
       <ul>
         <li><a class="pill" href="#work">Work</a></li>
         <li><a class="pill" href="#services">Services</a></li>
+        <li><a class="pill" href="#packages">Packages</a></li>
         <li><a class="pill" href="#about">About</a></li>
         <li><a class="pill solid" href="#contact">Contact</a></li>
       </ul>
@@ -226,7 +246,7 @@ body.lb-on { overflow: hidden; }
     <div class="hero">
       <span class="eyebrow">Brooklyn animation studio</span>
       <h1>Drawn from scratch.</h1>
-      <p>Illustrated animation and motion design for editorial, documentary and brand stories. <b>Give us a voice, a script or just an idea, and we'll draw the rest.</b></p>
+      <p>Illustrated animation and motion design for editorial, documentary, nonprofit and brand stories. <b>Give us a voice, a script or just an idea, and we'll draw the rest.</b></p>
       <div class="ctas">
         <a class="pill solid lg" href="#contact">Start a project</a>
         <a class="pill lg" href="#work">See the work</a>
@@ -291,7 +311,7 @@ body.lb-on { overflow: hidden; }
     <section id="services">
       <div class="sec-head"><h2>Services</h2><span class="eyebrow">First idea to final frame</span></div>
       <div class="services">
-        <div class="svc"><h3>Illustrated animation</h3><p>Editorial, documentary and explainer pieces with a hand-drawn feel. Bring an interview, a script or a rough idea, and we'll find the visual story.</p><span class="ex">Todd Solondz · A Small Light · Capitalism</span></div>
+        <div class="svc"><h3>Illustrated animation</h3><p>Editorial, documentary, nonprofit and explainer pieces with a hand-drawn feel. Bring an interview, a script or a rough idea, and we'll find the visual story.</p><span class="ex">Todd Solondz · A Small Light · Capitalism</span></div>
         <div class="svc"><h3>Title sequences and credits</h3><p>Openers and end credits that set the tone for a film or series before the first scene.</p><span class="ex">Paradise · Crystal</span></div>
         <div class="svc"><h3>Motion design</h3><p>Stylized motion graphics for brands, networks and campaigns, with 3D camera work in After Effects and Cinema 4D, Maya or Blender when a project calls for it.</p><span class="ex">National Geographic · HuffPost</span></div>
         <div class="svc"><h3>Illustration and characters</h3><p>Characters, style frames and standalone illustration for campaigns and editorial.</p><span class="ex">TD Bank Five Boro Bike Tour</span></div>
@@ -303,6 +323,25 @@ body.lb-on { overflow: hidden; }
         <li><b>Animation</b><span>Hand-drawn and motion work, plus sound and edit, with set check-ins.</span></li>
         <li><b>Delivery</b><span>Every format you need, from broadcast to social cut-downs.</span></li>
       </ol>
+    </section>
+
+    <section id="packages">
+      <div class="sec-head"><h2>Packages</h2><span class="eyebrow">Fixed scope, clear starting price</span></div>
+      <div class="packages">
+        <div class="pkg start"><span class="tag">Good place to start</span><h3>Style Frame Sprint</h3><span class="for">Nonprofits and brands</span><p>A week to find the look. You get a set of finished style frames that show how your story will feel in motion, ready to share with your team before you commit to a full piece.</p><div class="terms"><span>1 week</span><span>From $2,500</span></div></div>
+        <div class="pkg"><h3>Animated short</h3><span class="for">Editorial</span><p>A 45 to 90 second illustrated piece built around an interview, a script or a story idea.</p><div class="terms"><span>3 to 4 weeks</span><span>From $3,000</span></div></div>
+        <div class="pkg"><h3>Spot illustration</h3><span class="for">Editorial</span><p>A drawn image for an article, a cover, a campaign or a social post.</p><div class="terms"><span>3 to 7 days</span><span>From $600</span></div></div>
+        <div class="pkg"><h3>Title sequence</h3><span class="for">Film, series and documentary</span><p>An opener or end credits designed and animated to set the tone before the first scene.</p><div class="terms"><span>3 to 4 weeks</span><span>From $6,500</span></div></div>
+        <div class="pkg"><h3>Impact Explainer</h3><span class="for">Nonprofits</span><p>A 60 to 90 second hand-drawn film that explains your work and why it matters, made for donors, events and social.</p><div class="terms"><span>4 to 5 weeks</span><span>From $7,500</span></div></div>
+        <div class="pkg"><h3>Explainer in a Box</h3><span class="for">Brands</span><p>A 60 to 90 second explainer from script to final mix, with cut-downs for social.</p><div class="terms"><span>4 to 5 weeks</span><span>From $9,500</span></div></div>
+        <div class="pkg"><h3>Social Motion Pack</h3><span class="for">Brands and publishers</span><p>Ten short animated assets in one consistent style, sized for every feed.</p><div class="terms"><span>2 weeks</span><span>From $4,500</span></div></div>
+      </div>
+      <div class="desk">
+        <div><h3>Monthly retainers</h3><p>Ongoing work without a new quote every time. Reserve a set number of studio days each month for edits, social pieces and recurring campaigns. Three-month minimum.</p></div>
+        <div class="tier"><b>Studio Desk</b><span>3 days a month</span><span>$3,600 a month</span></div>
+        <div class="tier"><b>Studio Desk Plus</b><span>5 days a month</span><span>$5,750 a month</span></div>
+      </div>
+      <p class="pk-note">Every project starts with a 50% deposit. Need something that isn't listed? Get in touch and we'll scope it.</p>
     </section>
 
     <section id="about">
@@ -337,7 +376,7 @@ body.lb-on { overflow: hidden; }
           <label>Timeline<input id="f-when" name="timeline" placeholder="e.g. March launch"></label>
           <label class="full">What are you making?<textarea id="f-what" name="project"></textarea></label>
           <label class="full">Budget range (optional)
-            <select id="f-budget" name="budget"><option value="">Choose one</option><option>Under $10k</option><option>$10k to $25k</option><option>$25k to $50k</option><option>$50k and up</option></select>
+            <select id="f-budget" name="budget"><option value="">Choose one</option><option>Under $3k</option><option>$3k to $10k</option><option>$10k to $25k</option><option>$25k and up</option><option>Monthly (Studio Desk)</option></select>
           </label>
           <div class="full"><button class="pill solid lg" type="submit">Send inquiry</button></div>
           <p class="sent" id="sent" hidden>Thanks. The form connects to info@berglundstudio.com at launch.</p>
@@ -512,7 +551,7 @@ body.lb-on { overflow: hidden; }
 
   // 2. Sections and projects ease into place as they scroll into view.
   if (still || !('IntersectionObserver' in window)) return;
-  var groups = ['.sec-head', '.feature', '.card', '.svc', '.process li', '.facts', '.about > div', '.ticker', '.contact > div', '#inquiry'];
+  var groups = ['.sec-head', '.feature', '.card', '.svc', '.pkg', '.desk > div', '.process li', '.facts', '.about > div', '.ticker', '.contact > div', '#inquiry'];
   var io = new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { rootMargin: '0px 0px -8% 0px', threshold: .12 });
